@@ -41,7 +41,7 @@ function verny:CreateFile()
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
 		xpcall(function()
-			writefile('Folder Name Where The Scripts Go/'..FileName..".json",tostring("{}"))
+			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(Config) or tostring("{}"))
 		end,function(x)
 			return {false,x}
 		end)
@@ -1164,6 +1164,7 @@ function verny.create(Settings)
 				
 				function Item.MultiDropdown(options)
 					local Title = options.Title or tostring("Multi Dropdown")
+                    local ValueName = options.ValueName or tostring(math.random(5,999))
 					local Item = options.Item or {}
 					local Default = options.Default or {}
 					local MultiDropdown = {}
@@ -1379,8 +1380,8 @@ function verny.create(Settings)
 							TextWrapped = true,
 							TextXAlignment = Enum.TextXAlignment.Left,
 						})
-						if Config[Title] ~= nil then
-							Default = Config[Title]
+						if Config[ValueName] ~= nil then
+							Default = Config[ValueName]
 							for o,p in pairs(Default) do
 								if v == p then
 									tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
@@ -1391,8 +1392,8 @@ function verny.create(Settings)
 									pcall(callback,MultiDropdown)
 								end
 							end
-						elseif Config[Title] == nil then
-							Config[Title] = Default
+						elseif Config[ValueName] == nil then
+							Config[ValueName] = Default
 							for o,p in pairs(Default) do
 								if v == p  then
 									tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
@@ -1420,9 +1421,10 @@ function verny.create(Settings)
 								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							end
 							textdrop.Text = (table.concat(MultiDropdown,","))
-							Config[Title] = MultiDropdown
+							Config[ValueName] = MultiDropdown
 							if ConfigSetting.AutoSave then
 								verny:Savefile()
+                                print("saving")
 							end
 							pcall(callback,MultiDropdown)
 						end)
@@ -1443,7 +1445,14 @@ function verny.create(Settings)
 						textdrop.Text = ""
 					end
 
-					function dropfunc:Refresh(ClearSelect,Item)
+					function dropfunc:Refresh(Item)
+                        local ClearSelect = {}
+                        for i,v in pairs(dropdownscrollingframe:GetChildren()) do
+                            if v:IsA("TextButton") then
+                                table.insert(ClearSelect,v.TextHead.Text)
+                            end
+                        end
+
 						dropfunc.ClearName(ClearSelect)
 						for i,v in pairs(Item) do 
 							dropfunc.Add(v)
@@ -1547,9 +1556,10 @@ function verny.create(Settings)
 								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							end
 							textdrop.Text = (table.concat(MultiDropdown,","))
-							Config[Title] = MultiDropdown
+							Config[ValueName] = MultiDropdown
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							pcall(callback,MultiDropdown)
 						end)
@@ -1559,6 +1569,7 @@ function verny.create(Settings)
 
 				function Item.Dropdown(options)
 					local Title = options.Title or tostring("Dropdown")
+                    local ValueName = options.ValueName or tostring(math.random(5,999))
 					local Item = options.Item or {}
 					local Default = options.Default or {}
 					local callback = options.callback or function() end
@@ -1797,8 +1808,8 @@ function verny.create(Settings)
 								callback(Default)
 							end
 
-							if Config[Title] ~= nil and Config[Title] == v then
-								textdrop.Text = Config[Title]
+							if Config[ValueName] ~= nil and Config[ValueName] == v then
+								textdrop.Text = Config[ValueName]
 								for i,v in next,dropdownscrollingframe:GetChildren() do
 									if v:IsA("TextButton") then
 										for i,v in pairs(v:GetChildren()) do
@@ -1817,9 +1828,10 @@ function verny.create(Settings)
 										tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 									end
 								end
-								Config[Title] = v
+								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-									verny:Savefile()
+                                    verny:Savefile()
+                                    print("saving")
 								end
 								textdrop.Text = v
 								callback(v)
@@ -1843,9 +1855,10 @@ function verny.create(Settings)
 										tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 									end
 								end
-								Config[Title] = v
+								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-									verny:Savefile()
+                                    verny:Savefile()
+                                    print("saving")
 								end
 								textdrop.Text = v
 								callback(v)
@@ -1945,8 +1958,8 @@ function verny.create(Settings)
 								TextWrapped = true,
 								TextXAlignment = Enum.TextXAlignment.Left,
 							})
-							if Config[Title] ~= nil and Config[Title] == v then
-								textdrop.Text = Config[Title]
+							if Config[ValueName] ~= nil and Config[ValueName] == v then
+								textdrop.Text = Config[ValueName]
 								for i,v in next,dropdownscrollingframe:GetChildren() do
 									if v:IsA("TextButton") then
 										for i,v in pairs(v:GetChildren()) do
@@ -1965,9 +1978,10 @@ function verny.create(Settings)
 										tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 									end
 								end
-								Config[Title] = v
+								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-									verny:Savefile()
+                                    verny:Savefile()
+                                    print("saving")
 								end
 								textdrop.Text = v
 								callback(v)
@@ -1991,30 +2005,36 @@ function verny.create(Settings)
 										tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 									end
 								end
-								Config[Title] = v
+								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-									verny:Savefile()
+                                    verny:Savefile()
+                                    print("saving")
 								end
 								textdrop.Text = v
 								callback(v)
 							end)
 						end
 
-						function dropfunc:Refresh(ClearSelect,Item)
-							dropfunc.ClearName(ClearSelect)
-							for i,v in pairs(Item) do 
-								dropfunc.Add(v)
-							end
-						end
-						function dropfunc:Update(Item)
-							dropfunc.Add(Item)
-						end
-						return dropfunc
+                        function dropfunc:Refresh(Item)
+                            local ClearSelect = {}
+                            for i,v in pairs(dropdownscrollingframe:GetChildren()) do
+                                if v:IsA("TextButton") then
+                                    table.insert(ClearSelect,v.TextHead.Text)
+                                end
+                            end
+    
+                            dropfunc.ClearName(ClearSelect)
+                            for i,v in pairs(Item) do 
+                                dropfunc.Add(v)
+                            end
+                        end
+					return dropfunc
 				end
 
 				function Item.Toggle(options)
 
 					local Title = options.Title or tostring("Toggle")
+                    local ValueName = options.ValueName or tostring(math.random(5,999))
 					local Default = options.Default or false
 					local callback = options.callback or function() end
 					local toggleframe = Create("Frame",{
@@ -2093,23 +2113,25 @@ function verny.create(Settings)
 
 					local togglefocus = false
 					--[SaveModule]
-					if Config[Title] ~= nil then
-						Default = Config[Title]
-					elseif Config[Title] == nil then
-						Config[Title] = Default
+					if Config[ValueName] ~= nil then
+						Default = Config[ValueName]
+					elseif Config[ValueName] == nil then
+						Config[ValueName] = Default
 					end
 					togglebutton.MouseButton1Down:Connect(function()
 						if not togglefocus then
-							Config[Title] = true
+							Config[ValueName] = true
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0})
 						else
-							Config[Title] = false
+							Config[ValueName] = false
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
@@ -2129,18 +2151,20 @@ function verny.create(Settings)
 
 					function togglefunc.Update(value)
 						if value then
-							Config[Title] = value
+							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0})
 							togglefocus = not togglefocus
 							callback(togglefocus)
 						else
-							Config[Title] = value
+							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
@@ -2194,6 +2218,7 @@ function verny.create(Settings)
 					local sliderfunc = {}
 
 					local Title = options.Title or "Slider"
+                    local ValueName = options.ValueName or tostring(math.random(5,999))
 					local Max = options.Max or 100
 					local Min = options.Min or 0
 					local Dec = options.Dec or false
@@ -2328,16 +2353,18 @@ function verny.create(Settings)
 						if Dec == true then
 							local value = string.format("%.1f",((pos.X.Scale * Max) / Max) * (Max - Min) + Min)
 							number_text.Text = tostring(value)
-							Config[Title] = value
+							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							callback(value)
 						else
 							local value = math.floor(((pos.X.Scale * Max) / Max) * (Max - Min) + Min)
-							Config[Title] = value
+							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+                                verny:Savefile()
+                                print("saving")
 							end
 							number_text.Text = tostring(value)
 							callback(value)
@@ -2345,8 +2372,8 @@ function verny.create(Settings)
 					end
 
 					pcall(function()
-						if Config[Title] ~= nil then
-							Default = Config[Title]
+						if Config[ValueName] ~= nil then
+							Default = Config[ValueName]
 							if Default <= Min then
 								number_text.Text = Min
 								SliderValueFrame:TweenSize(UDim2.new((tonumber(number_text.Text) or 0) / Max, 0, 0, 25), "Out", "Sine", 0.2, true)
@@ -2356,8 +2383,8 @@ function verny.create(Settings)
 								SliderValueFrame:TweenSize(UDim2.new((tonumber(number_text.Text) or 0) / Max, 0, 0, 25), "Out", "Sine", 0.2, true)
 								callback(Default)
 							end
-						elseif Config[Title] == nil then
-							Config[Title] = Default
+						elseif Config[ValueName] == nil then
+							Config[ValueName] = Default
 							number_text.Text = Default
 							SliderValueFrame:TweenSize(UDim2.new((tonumber(number_text.Text) or 0) / Max, 0, 0, 25), "Out", "Sine", 0.2, true)
 							callback(tonumber(number_text.Text))
@@ -2417,9 +2444,10 @@ function verny.create(Settings)
 						else
 							number_text.Text = value
 						end
-						Config[Title] = tonumber(number_text.Text)
+						Config[ValueName] = tonumber(number_text.Text)
 						if ConfigSetting.AutoSave then
-							verny:Savefile()
+                            verny:Savefile()
+                            print("saving")
 						end
 						callback(number_text.Text)
 					end
@@ -2429,6 +2457,7 @@ function verny.create(Settings)
 				function Item.TextBox(options)
 
 					local Title = options.Title or tostring("TextBox")
+                    local ValueName = options.ValueName or tostring(math.random(5,999))
 					local Holder = options.Holder or tostring("Holder")
 					local callback = options.callback or function() end
 
@@ -2493,12 +2522,12 @@ function verny.create(Settings)
 						ClipsDescendants = true,
 					})
 
-					if Config[Title] ~= nil then
-						Holder = Config[Title]
+					if Config[ValueName] ~= nil then
+						Holder = Config[ValueName]
 						textbox.Text = Holder
 						pcall(callback,textbox.Text)
-					elseif Config[Title] == nil then
-						Config[Title] = Holder
+					elseif Config[ValueName] == nil then
+						Config[ValueName] = Holder
 					end
 
 
@@ -2520,9 +2549,10 @@ function verny.create(Settings)
 						tween(textbox,0.2,Enum.EasingStyle.Quart,{Position = UDim2.new(0, 0, 0, 0)})
 						if ep then
 							if #textbox.Text > 0 then
-								Config[Title] = textbox.Text
+								Config[ValueName] = textbox.Text
 								if ConfigSetting.AutoSave then
-									verny:Savefile()
+                                    verny:Savefile()
+                                    print("saving")
 								end
 								pcall(callback, textbox.Text)
 							end
@@ -2587,30 +2617,22 @@ function verny.create(Settings)
 					local paragraph = Instance.new("TextLabel")
 					local paragraphframe_uicorner = Instance.new("UICorner")
 					local content = Instance.new("TextLabel")
-
-					paragraphframe.Name = "paragraphframe"
-					paragraphframe.Parent = page
-					paragraphframe.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
-					paragraphframe.BackgroundTransparency = 1.000
-					paragraphframe.BorderSizePixel = 0
-					paragraphframe.ClipsDescendants = true
-					paragraphframe.Position = UDim2.new(0, 0, 10.318182, 0)
-					paragraphframe.Size = UDim2.new(0, 380, 0, 50)
-
-					stroke(paragraphframe,0,1,Color3.fromRGB(50,50,50))
+                    local uilistlayout = Instance.new("UIListLayout",paragraphframe)
+                    local uipadding = Instance.new("UIPadding",paragraphframe)
 
 					paragraph.Name = "paragraph"
 					paragraph.Parent = paragraphframe
 					paragraph.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					paragraph.BackgroundTransparency = 1.000
 					paragraph.Position = UDim2.new(0.0351544842, 0, 0.0913455337, 0)
-					paragraph.Size = UDim2.new(0, 353, 0, 23)
+					paragraph.Size = UDim2.new(1, 0, 0, 14)
 					paragraph.FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold)
 					paragraph.Text = tostring(Title)
 					paragraph.TextColor3 = Color3.fromRGB(255, 255, 255)
-					paragraph.TextSize = 14.000
+					paragraph.TextSize = 13.000
 					paragraph.TextWrapped = true
 					paragraph.TextXAlignment = Enum.TextXAlignment.Left
+                    paragraph.LayoutOrder = 1
 
 					paragraphframe_uicorner.CornerRadius = UDim.new(0, 4)
 					paragraphframe_uicorner.Name = "paragraphframe_uicorner"
@@ -2621,14 +2643,43 @@ function verny.create(Settings)
 					content.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 					content.BackgroundTransparency = 1.000
 					content.Position = UDim2.new(0.0351544842, 0, 0.540819108, 0)
-					content.Size = UDim2.new(0, 353, 0, 19)
 					content.FontFace = Font.fromId(12187365977)
 					content.Text = tostring(Desc)
 					content.TextColor3 = Color3.fromRGB(255, 255, 255)
-					content.TextSize = 12.000
+					content.TextSize = 12
 					content.TextTransparency = 0.450
 					content.TextWrapped = true
 					content.TextXAlignment = Enum.TextXAlignment.Left
+                    content.TextYAlignment = Enum.TextYAlignment.Top
+                    content.AutomaticSize = Enum.AutomaticSize.Y
+                    content.LayoutOrder = 2
+
+                    paragraphframe.Name = "paragraphframe"
+					paragraphframe.Parent = page
+					paragraphframe.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
+					paragraphframe.BackgroundTransparency = 1.000
+					paragraphframe.BorderSizePixel = 0
+					paragraphframe.ClipsDescendants = true
+					paragraphframe.Position = UDim2.new(0, 0, 10.318182, 0)
+
+					stroke(paragraphframe,0,1,Color3.fromRGB(50,50,50))
+
+                    uilistlayout.Name = "UIListLayout"
+                    uilistlayout.SortOrder = Enum.SortOrder.LayoutOrder
+                    uilistlayout.VerticalAlignment = Enum.VerticalAlignment.Top
+                    uilistlayout.Padding = UDim.new(0,4)
+
+                    uipadding.Name = "UIPadding"
+                    uipadding.PaddingTop = UDim.new(0, 8)
+                    uipadding.PaddingLeft = UDim.new(0,13)
+
+                    content.Size = UDim2.new(0.95,0,0,(content.TextBounds.Y + 40) * 1.5)
+                    paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 40)
+
+                    content:GetPropertyChangedSignal("Text"):Connect(function()
+                        content.Size = UDim2.new(1, 0, 0, (content.TextBounds.Y + 40) * 1.5)
+                        paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 40)
+                    end)
 
 					function Refresh.Update(v)
 						paragraph.Text = tostring(v)
