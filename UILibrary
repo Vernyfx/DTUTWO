@@ -75,7 +75,7 @@ function verny:Savefile()
 		verny:CreateFile()
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		ConfigModule:CreateFile()
+		verny:CreateFile()
 		return {false,"Somethings error pls try again."..debug.traceback()}
 	else
 		xpcall(function()
