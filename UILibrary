@@ -32,7 +32,7 @@ end
 --[Save Module]
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
-local ConfigSetting = {FileName=game.Players.LocalPlayer.Name.."AnimeSwitch",AutoSave=true,FolderName='WingHubTest'}
+local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name}
 function verny:CreateFile()
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
