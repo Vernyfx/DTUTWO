@@ -72,10 +72,10 @@ function verny:Savefile()
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	local FileName = ConfigSetting.FileName or "Next"
 	if not isfolder(FolderName) then
-		verny:CreateFile()
+		self:CreateFile()
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		verny:CreateFile()
+		self:CreateFile()
 		return {false,"Somethings error pls try again."..debug.traceback()}
 	else
 		xpcall(function()
