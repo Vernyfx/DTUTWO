@@ -68,7 +68,7 @@ function verny:LoadFile(ConfigTable)
 		end)
 	end
 end
-
+print("test")
 function verny:LoadConfig(ConfigFile,Flags)
 	print(ConfigFile)
 	local Data = game:GetService("HttpService"):JSONDecode(ConfigFile)
