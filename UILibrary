@@ -68,10 +68,11 @@ function verny:LoadFile(ConfigTable)
 		end)
 	end
 end
-print("nice")
+print("nice2")
 function verny:LoadConfig(ConfigFile,Flags)
 	print(ConfigFile)
-	local Data = game:GetService("HttpService"):JSONEncode(ConfigFile)
+	local Data = game:GetService("HttpService"):JSONDecode(ConfigFile)
+	print(Data)
 	for FlagName, FlagValue in ipairs(Data) do
 		if Flags[FlagName] then
 			spawn(function()
