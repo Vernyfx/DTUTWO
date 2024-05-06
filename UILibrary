@@ -34,6 +34,9 @@ local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
 local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name}
 function verny:CreateFile(ConfigTable)
+	for i,v in pairs(ConfigTable) do
+		warn(i,v," | C")
+	end
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
@@ -50,6 +53,9 @@ function verny:CreateFile(ConfigTable)
 	end
 end
 function verny:LoadFile(ConfigTable)
+	for i,v in pairs(ConfigTable) do
+		warn(i,v," | L")
+	end
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
@@ -69,25 +75,25 @@ function verny:LoadFile(ConfigTable)
 	end
 end
 
-function verny:LoadConfig(ConfigFile,Flags)
-	local Data = HttpService:JSONDecode(ConfigFile)
-	for FlagName, FlagValue in ipairs(Data) do
-		if Flags[FlagName] then
-			spawn(function() 
-				if RayfieldLibrary.Flags[FlagName].CurrentValue
-				or RayfieldLibrary.Flags[FlagName].CurrentKeybind 
-				or RayfieldLibrary.Flags[FlagName].CurrentOption 
-				or RayfieldLibrary.Flags[FlagName].Color ~= FlagValue then RayfieldLibrary.Flags[FlagName]:Set(FlagValue) end
-			end)
-		else
-			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
-		end
-	end
-end
+--function verny:LoadConfig(ConfigFile,Flags)
+--	local Data = HttpService:JSONDecode(ConfigFile)
+--	for FlagName, FlagValue in ipairs(Data) do
+--		if Flags[FlagName] then
+--			spawn(function() 
+--				if RayfieldLibrary.Flags[FlagName].CurrentValue
+--				or RayfieldLibrary.Flags[FlagName].CurrentKeybind 
+--				or RayfieldLibrary.Flags[FlagName].CurrentOption 
+--				or RayfieldLibrary.Flags[FlagName].Color ~= FlagValue then RayfieldLibrary.Flags[FlagName]:Set(FlagValue) end
+--			end)
+--		else
+--			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
+--		end
+--	end
+--end
 
 function verny:Savefile(ConfigTable)
 	for i,v in pairs(ConfigTable) do
-		warn(i,v)
+		warn(i,v," | S")
 	end
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	local FileName = ConfigSetting.FileName or "Next"
