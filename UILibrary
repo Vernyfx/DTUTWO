@@ -86,6 +86,9 @@ function verny:LoadConfig(ConfigFile,Flags)
 end
 
 function verny:Savefile(ConfigTable)
+	for i,v in pairs(ConfigTable) do
+		warn(i,v)
+	end
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	local FileName = ConfigSetting.FileName or "Next"
 	if not isfolder(FolderName) then
