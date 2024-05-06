@@ -32,7 +32,7 @@ end
 --[Save Module]
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
-local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name}
+local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
 function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
@@ -69,21 +69,20 @@ function verny:LoadFile(ConfigTable)
 	end
 end
 
---function verny:LoadConfig(ConfigFile,Flags)
---	local Data = HttpService:JSONDecode(ConfigFile)
---	for FlagName, FlagValue in ipairs(Data) do
---		if Flags[FlagName] then
---			spawn(function() 
---				if RayfieldLibrary.Flags[FlagName].CurrentValue
---				or RayfieldLibrary.Flags[FlagName].CurrentKeybind 
---				or RayfieldLibrary.Flags[FlagName].CurrentOption 
---				or RayfieldLibrary.Flags[FlagName].Color ~= FlagValue then RayfieldLibrary.Flags[FlagName]:Set(FlagValue) end
---			end)
---		else
---			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
---		end
---	end
---end
+function verny:LoadConfig(ConfigFile,Flags)
+	local Data = HttpService:JSONDecode(ConfigFile)
+	for FlagName, FlagValue in ipairs(Data) do
+		if Flags[FlagName] then
+			spawn(function()
+				if Flags[FlagName] ~= FlagValue then
+
+					Flags[FlagName]:Set(FlagValue)
+					
+				end
+			end)
+		end
+	end
+end
 
 function verny:Savefile(ConfigTable)
 	local FolderName = ConfigSetting.FolderName or "NextJs"
@@ -1441,8 +1440,7 @@ function verny.create(Settings)
 							Config[ValueName] = MultiDropdown
 							pcall(callback,MultiDropdown)
 							if ConfigSetting.AutoSave then
-								
-                                print("saving")
+                                warn("saving")
 							end
 						end)
 					end
@@ -1577,9 +1575,33 @@ function verny.create(Settings)
 							pcall(callback,MultiDropdown)
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						end)
+					end
+
+					function dropfunc:Set(Item)
+						for i,v in pairs(Item) do
+							if tablefound(MultiDropdown,v) == false then
+								table.insert(MultiDropdown,v)
+								tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
+								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
+							else
+								for ine,va in pairs(MultiDropdown) do
+									if va == v then
+										table.remove(MultiDropdown,ine)
+									end
+								end
+								tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
+								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
+							end
+							textdrop.Text = (table.concat(MultiDropdown,","))
+							Config[ValueName] = MultiDropdown
+							pcall(callback,MultiDropdown)
+							if ConfigSetting.AutoSave then
+								warn("saving")
+							end
+						end
 					end
 					return dropfunc
 				end
@@ -1850,7 +1872,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									print("saving")
+									warn("saving")
 								end
 							end
 							buttonbar.MouseButton1Down:Connect(function()
@@ -1876,8 +1898,7 @@ function verny.create(Settings)
 								textdrop.Text = v
 								callback(v)
 								if ConfigSetting.AutoSave then
-									
-									print("saving")
+									warn("saving")
 								end
 							end)
 						end
@@ -2000,7 +2021,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									print("saving")
+									warn("saving")
 								end
 							end
 							buttonbar.MouseButton1Down:Connect(function()
@@ -2027,7 +2048,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									print("saving")
+									warn("saving")
 								end
 							end)
 						end
@@ -2045,6 +2066,34 @@ function verny.create(Settings)
                                 dropfunc.Add(v)
                             end
                         end
+
+						function dropfunc:Set(Item)
+							for i,v in next,dropdownscrollingframe:GetChildren() do
+								if v:IsA("TextButton") and v.TextHead.Text == Item then
+									for i,v in pairs(v:GetChildren()) do
+										if v:IsA("Frame") then
+											for i,v in pairs(v:GetChildren()) do
+												if v:IsA("Frame") then
+													tween(v,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
+												end
+											end
+										end
+										if v:IsA("TextLabel") then
+											tween(v,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
+										end
+									end
+									tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
+									tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
+								end
+							end
+							Config[ValueName] = v
+							textdrop.Text = v
+							callback(v)
+							if ConfigSetting.AutoSave then
+								warn("saving")
+							end
+						end
+
 					return dropfunc
 				end
 
@@ -2142,7 +2191,7 @@ function verny.create(Settings)
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0})
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						else
 							Config[ValueName] = false
@@ -2150,7 +2199,7 @@ function verny.create(Settings)
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						end
 						togglefocus = not togglefocus
@@ -2166,7 +2215,7 @@ function verny.create(Settings)
 
 					local togglefunc = {}
 
-					function togglefunc.Update(value)
+					function togglefunc:Set(value)
 						if value then
 							Config[ValueName] = value
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
@@ -2174,8 +2223,7 @@ function verny.create(Settings)
 							togglefocus = not togglefocus
 							callback(togglefocus)
 							if ConfigSetting.AutoSave then
-								
-                                print("saving")
+                                warn("saving")
 							end
 						else
 							Config[ValueName] = value
@@ -2185,7 +2233,7 @@ function verny.create(Settings)
 							callback(value)
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						end
 					end
@@ -2374,7 +2422,7 @@ function verny.create(Settings)
 							callback(value)
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						else
 							local value = math.floor(((pos.X.Scale * Max) / Max) * (Max - Min) + Min)
@@ -2383,7 +2431,7 @@ function verny.create(Settings)
 							callback(value)
 							if ConfigSetting.AutoSave then
 								
-                                print("saving")
+                                warn("saving")
 							end
 						end
 					end
@@ -2450,7 +2498,7 @@ function verny.create(Settings)
 						end
 					end)
 
-					function sliderfunc.Update(value)
+					function sliderfunc:Set(value)
 						local pos = UDim2.new(math.clamp((value) / Max, 0, 1), 0, 0.5, 0)
 						SliderValueFrame_2:TweenPosition(pos, "Out", "Sine", 0.25, true)
 						SliderValueFrame:TweenSize(UDim2.new((value or 0) / Max, 0, 0, 25), "Out", "Sine", 0.2, true)
@@ -2465,7 +2513,7 @@ function verny.create(Settings)
 						callback(number_text.Text)
 						if ConfigSetting.AutoSave then
 							
-							print("saving")
+							warn("saving")
 						end
 					end
 					return sliderfunc
@@ -2527,7 +2575,6 @@ function verny.create(Settings)
 						Parent = textboxholderframe,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 1,
-						Size = UDim2.new(0, 52, 0, 24),
 						FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 						PlaceholderText = tostring(Holder),
 						Text = "",
@@ -2537,6 +2584,7 @@ function verny.create(Settings)
 						TextWrapped = false,
 						TextXAlignment = Enum.TextXAlignment.Right,
 						ClipsDescendants = true,
+						Size = UDim2.new(0, 52, 0, PlaceholderText.TextBounds.X)
 					})
 
 					if Config[ValueName] ~= nil then
@@ -2569,8 +2617,7 @@ function verny.create(Settings)
 								Config[ValueName] = textbox.Text
 								pcall(callback, textbox.Text)
 								if ConfigSetting.AutoSave then
-									
-									print("saving")
+									warn("saving")
 								end
 							end
 						end
