@@ -34,9 +34,6 @@ local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
 local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name}
 function verny:CreateFile(ConfigTable)
-	for i,v in pairs(ConfigTable) do
-		warn(i,v," | C")
-	end
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
@@ -53,9 +50,6 @@ function verny:CreateFile(ConfigTable)
 	end
 end
 function verny:LoadFile(ConfigTable)
-	for i,v in pairs(ConfigTable) do
-		warn(i,v," | L")
-	end
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
@@ -92,9 +86,6 @@ end
 --end
 
 function verny:Savefile(ConfigTable)
-	for i,v in pairs(ConfigTable) do
-		warn(i,v," | S")
-	end
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	local FileName = ConfigSetting.FileName or "Next"
 	if not isfolder(FolderName) then
