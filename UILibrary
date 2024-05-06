@@ -33,7 +33,7 @@ end
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
 local ConfigSetting = {FileName=game.GameId,AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name}
-function verny:CreateFile()
+function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
@@ -41,7 +41,7 @@ function verny:CreateFile()
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
 		xpcall(function()
-			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(Config) or tostring("{}"))
+			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(ConfigTable) or tostring("{}"))
 		end,function(x)
 			return {false,x}
 		end)
@@ -49,14 +49,14 @@ function verny:CreateFile()
 		return {true,"Folder Created."}
 	end
 end
-function verny:LoadFile()
+function verny:LoadFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
-		verny:CreateFile()
+		verny:CreateFile(ConfigTable)
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		verny:CreateFile()
+		verny:CreateFile(ConfigTable)
 		return {false,"Somethings error pls try again."..debug.traceback()}
 	else
 		xpcall(function()
@@ -68,18 +68,35 @@ function verny:LoadFile()
 		end)
 	end
 end
-function verny:Savefile()
+
+function verny:LoadConfig(ConfigFile,Flags)
+	local Data = HttpService:JSONDecode(ConfigFile)
+	for FlagName, FlagValue in ipairs(Data) do
+		if Flags[FlagName] then
+			spawn(function() 
+				if RayfieldLibrary.Flags[FlagName].CurrentValue
+				or RayfieldLibrary.Flags[FlagName].CurrentKeybind 
+				or RayfieldLibrary.Flags[FlagName].CurrentOption 
+				or RayfieldLibrary.Flags[FlagName].Color ~= FlagValue then RayfieldLibrary.Flags[FlagName]:Set(FlagValue) end
+			end)
+		else
+			RayfieldLibrary:Notify({Title = "Flag Error", Content = "Rayfield was unable to find '"..FlagName.. "'' in the current script"})
+		end
+	end
+end
+
+function verny:Savefile(ConfigTable)
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	local FileName = ConfigSetting.FileName or "Next"
 	if not isfolder(FolderName) then
-		self:CreateFile()
+		self:CreateFile(ConfigTable)
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		self:CreateFile()
+		self:CreateFile(ConfigTable)
 		return {false,"Somethings error pls try again."..debug.traceback()}
 	else
 		xpcall(function()
-			local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,Config)
+			local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
 			if not Success then
 				return {false,"Somethings error pls try again."..debug.traceback()}
 			end
@@ -1423,7 +1440,7 @@ function verny.create(Settings)
 							textdrop.Text = (table.concat(MultiDropdown,","))
 							Config[ValueName] = MultiDropdown
 							if ConfigSetting.AutoSave then
-								verny:Savefile()
+								verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							pcall(callback,MultiDropdown)
@@ -1558,7 +1575,7 @@ function verny.create(Settings)
 							textdrop.Text = (table.concat(MultiDropdown,","))
 							Config[ValueName] = MultiDropdown
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							pcall(callback,MultiDropdown)
@@ -1830,7 +1847,7 @@ function verny.create(Settings)
 								end
 								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-                                    verny:Savefile()
+                                    verny:Savefile(_G.Settings)
                                     print("saving")
 								end
 								textdrop.Text = v
@@ -1857,7 +1874,7 @@ function verny.create(Settings)
 								end
 								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-                                    verny:Savefile()
+                                    verny:Savefile(_G.Settings)
                                     print("saving")
 								end
 								textdrop.Text = v
@@ -1980,7 +1997,7 @@ function verny.create(Settings)
 								end
 								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-                                    verny:Savefile()
+                                    verny:Savefile(_G.Settings)
                                     print("saving")
 								end
 								textdrop.Text = v
@@ -2007,7 +2024,7 @@ function verny.create(Settings)
 								end
 								Config[ValueName] = v
 								if ConfigSetting.AutoSave then
-                                    verny:Savefile()
+                                    verny:Savefile(_G.Settings)
                                     print("saving")
 								end
 								textdrop.Text = v
@@ -2122,7 +2139,7 @@ function verny.create(Settings)
 						if not togglefocus then
 							Config[ValueName] = true
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
@@ -2130,7 +2147,7 @@ function verny.create(Settings)
 						else
 							Config[ValueName] = false
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
@@ -2153,7 +2170,7 @@ function verny.create(Settings)
 						if value then
 							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
@@ -2163,7 +2180,7 @@ function verny.create(Settings)
 						else
 							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
@@ -2355,7 +2372,7 @@ function verny.create(Settings)
 							number_text.Text = tostring(value)
 							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							callback(value)
@@ -2363,7 +2380,7 @@ function verny.create(Settings)
 							local value = math.floor(((pos.X.Scale * Max) / Max) * (Max - Min) + Min)
 							Config[ValueName] = value
 							if ConfigSetting.AutoSave then
-                                verny:Savefile()
+                                verny:Savefile(_G.Settings)
                                 print("saving")
 							end
 							number_text.Text = tostring(value)
@@ -2446,7 +2463,7 @@ function verny.create(Settings)
 						end
 						Config[ValueName] = tonumber(number_text.Text)
 						if ConfigSetting.AutoSave then
-                            verny:Savefile()
+                            verny:Savefile(_G.Settings)
                             print("saving")
 						end
 						callback(number_text.Text)
@@ -2551,7 +2568,7 @@ function verny.create(Settings)
 							if #textbox.Text > 0 then
 								Config[ValueName] = textbox.Text
 								if ConfigSetting.AutoSave then
-                                    verny:Savefile()
+                                    verny:Savefile(_G.Settings)
                                     print("saving")
 								end
 								pcall(callback, textbox.Text)
