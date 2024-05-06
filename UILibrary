@@ -32,7 +32,7 @@ end
 --[Save Module]
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
-local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
+local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub_'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
 function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
@@ -70,6 +70,7 @@ function verny:LoadFile(ConfigTable)
 end
 
 function verny:LoadConfig(ConfigFile,Flags)
+	print(ConfigFile)
 	local Data = game:GetService("HttpService"):JSONDecode(ConfigFile)
 	for FlagName, FlagValue in ipairs(Data) do
 		if Flags[FlagName] then
