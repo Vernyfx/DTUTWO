@@ -1,3 +1,17 @@
+_G.doneLoading = false
+
+if not _G.WFH then
+    _G.WFH = true
+    local old;
+    old = hookfunction(writefile, function(...)
+        if _G.doneLoading then
+            return old(...)
+        else
+            print("writefile blocked")
+        end
+    end)
+end
+
 local function generateUUID()
 	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 	return string.gsub(template, '[xy]', function (c)
@@ -53,10 +67,10 @@ function verny:LoadFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
 	if not isfolder(FolderName) then
-		verny:CreateFile(ConfigTable)
+		verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		verny:CreateFile(ConfigTable)
+		verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 		return {false,"Somethings error pls try again."..debug.traceback()}
 	else
 		xpcall(function()
@@ -68,44 +82,41 @@ function verny:LoadFile(ConfigTable)
 		end)
 	end
 end
-print("nice2")
-function verny:LoadConfig(ConfigFile,Flags)
-	local Data = game:GetService("HttpService"):JSONDecode(ConfigFile)
-	print(Data)
-	for FlagName, FlagValue in ipairs(Data) do
-		if Flags[FlagName] then
-			spawn(function()
-				if Flags[FlagName] ~= FlagValue then
 
-					Flags[FlagName]:Set(FlagValue)
-					
+function verny:Savefile(ConfigTable)
+	if _G.doneLoading then
+		local FolderName = ConfigSetting.FolderName or "NextJs"
+		local FileName = ConfigSetting.FileName or "Next"
+		if not isfolder(FolderName) then
+			self:CreateFile(HttpService:JSONEncode(ConfigTable))
+		end
+		if not isfile(FolderName..'/'..FileName..".json") then
+			self:CreateFile(HttpService:JSONEncode(ConfigTable))
+			return {false,"Somethings error pls try again."..debug.traceback()}
+		else
+			xpcall(function()
+				local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
+				if not Success then
+					return {false,"Somethings error pls try again."..debug.traceback()}
 				end
+				writefile(FolderName..'/'..FileName..".json",data)
+				return {true,"Success to readfile"}
+			end,function(x)
+				return {false,x}
 			end)
 		end
 	end
 end
 
-function verny:Savefile(ConfigTable)
-	local FolderName = ConfigSetting.FolderName or "NextJs"
-	local FileName = ConfigSetting.FileName or "Next"
-	if not isfolder(FolderName) then
-		self:CreateFile(ConfigTable)
-	end
-	if not isfile(FolderName..'/'..FileName..".json") then
-		self:CreateFile(ConfigTable)
-		return {false,"Somethings error pls try again."..debug.traceback()}
-	else
-		xpcall(function()
-			local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
-			if not Success then
-				return {false,"Somethings error pls try again."..debug.traceback()}
-			end
-			writefile(FolderName..'/'..FileName..".json",data)
-			return {true,"Success to readfile"}
-		end,function(x)
-			return {false,x}
+function verny:LoadConfig(ConfigFile)
+    local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
+    for FlagName, FlagValue in pairs(Data) do
+		task.spawn(function()
+			_G[FlagName]:Set(FlagValue)
 		end)
-	end
+    end
+
+	_G.doneLoading = true
 end
 -- [Abbreviate]
 
@@ -1397,6 +1408,7 @@ function verny.create(Settings)
 							TextWrapped = true,
 							TextXAlignment = Enum.TextXAlignment.Left,
 						})
+                        
 						if Config[ValueName] ~= nil then
 							Default = Config[ValueName]
 							for o,p in pairs(Default) do
@@ -1575,34 +1587,53 @@ function verny.create(Settings)
 							Config[ValueName] = MultiDropdown
 							pcall(callback,MultiDropdown)
 							if ConfigSetting.AutoSave then
-								
                                 warn("saving")
 							end
 						end)
 					end
 
 					function dropfunc:Set(Item)
-						for i,v in pairs(Item) do
-							if tablefound(MultiDropdown,v) == false then
-								table.insert(MultiDropdown,v)
-								tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
-								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
-							else
-								for ine,va in pairs(MultiDropdown) do
-									if va == v then
-										table.remove(MultiDropdown,ine)
+                        for i,v in pairs(Item) do
+                            for a,b in pairs(dropdownscrollingframe:GetChildren()) do
+                                if b.Name == "buttonbar" and b.TextHead.Text == v and b.CheckBox1.CheckBox2.Size ~= UDim2.new(0, 23, 0, 23) then
+                                    local TextHead = b.TextHead
+                                    local CheckBox2 = b.CheckBox1.CheckBox2
+                                    
+                                    if tablefound(MultiDropdown,v) == false then
+                                        table.insert(MultiDropdown,v)
+                                        tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
+                                        tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
+
+										textdrop.Text = (table.concat(MultiDropdown,","))
+										Config[ValueName] = MultiDropdown
+										pcall(callback,MultiDropdown)
+                                    end
+
+							elseif b.Name == "buttonbar" and b.CheckBox1.CheckBox2.Size == UDim2.new(0, 23, 0, 23) and tablefound(MultiDropdown,v) then
+								local TextHead = b.TextHead
+								local CheckBox2 = b.CheckBox1.CheckBox2
+
+									if not tablefound(Item,TextHead.Text) then
+
+										for ine,va in pairs(MultiDropdown) do
+											if va == TextHead.Text then
+												table.remove(MultiDropdown,ine)
+											end
+										end
+
+										tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
+										tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
+
+										textdrop.Text = (table.concat(MultiDropdown,","))
+										Config[ValueName] = MultiDropdown
+										pcall(callback,MultiDropdown)
 									end
 								end
-								tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
-								tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
-							end
-							textdrop.Text = (table.concat(MultiDropdown,","))
-							Config[ValueName] = MultiDropdown
-							pcall(callback,MultiDropdown)
-							if ConfigSetting.AutoSave then
-								warn("saving")
-							end
-						end
+
+                            end
+
+                        end
+
 					end
 					return dropfunc
 				end
@@ -2069,30 +2100,33 @@ function verny.create(Settings)
                         end
 
 						function dropfunc:Set(Item)
-							for i,v in next,dropdownscrollingframe:GetChildren() do
-								if v:IsA("TextButton") and v.TextHead.Text == Item then
-									for i,v in pairs(v:GetChildren()) do
-										if v:IsA("Frame") then
-											for i,v in pairs(v:GetChildren()) do
-												if v:IsA("Frame") then
-													tween(v,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
-												end
-											end
-										end
-										if v:IsA("TextLabel") then
-											tween(v,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
-										end
-									end
-									tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
-									tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
-								end
-							end
-							Config[ValueName] = v
-							textdrop.Text = v
-							callback(v)
-							if ConfigSetting.AutoSave then
-								warn("saving")
-							end
+                            local TextHead
+                            local CheckBox2 
+                            for i,v in pairs(dropdownscrollingframe:GetChildren()) do
+                                if v:IsA("TextButton") then
+                                    TextHead = v.TextHead
+                                    CheckBox2 = v.CheckBox1.CheckBox2
+                                    for i,v in pairs(v:GetChildren()) do
+                                        if v:IsA("Frame") then
+                                            for i,v in pairs(v:GetChildren()) do
+                                                if v:IsA("Frame") and v.Parent.Parent.TextHead.Text ~= Item then
+                                                    tween(v,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
+                                                end
+                                            end
+                                        end
+                                        if v:IsA("TextLabel") then
+                                            tween(v,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
+                                        end
+                                    end
+                                    if v.TextHead.Text == Item then
+                                        tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
+                                        tween(TextHead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
+                                    end
+                                end
+                            end
+                            Config[ValueName] = Item
+                            textdrop.Text = Item
+                            callback(Item)
 						end
 
 					return dropfunc
@@ -2186,6 +2220,7 @@ function verny.create(Settings)
 						Config[ValueName] = Default
 					end
 					togglebutton.MouseButton1Down:Connect(function()
+						print(togglefocus)
 						if not togglefocus then
 							Config[ValueName] = true
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
@@ -2199,7 +2234,6 @@ function verny.create(Settings)
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							if ConfigSetting.AutoSave then
-								
                                 warn("saving")
 							end
 						end
@@ -2216,26 +2250,26 @@ function verny.create(Settings)
 
 					local togglefunc = {}
 
-					function togglefunc:Set(value)
-						if value then
-							Config[ValueName] = value
+					function togglefunc:Set(value)						
+
+						if Config[ValueName] ~= nil then
+                            Default = Config[ValueName]
+                        elseif Config[ValueName] == nil then
+                            Config[ValueName] = Default
+                        end
+
+						if value or togglefocus then
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0})
-							togglefocus = not togglefocus
+							togglefocus = value
 							callback(togglefocus)
-							if ConfigSetting.AutoSave then
-                                warn("saving")
-							end
+                            Config[ValueName] = value
 						else
-							Config[ValueName] = value
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
-							togglefocus = not togglefocus
+							togglefocus = value
 							callback(value)
-							if ConfigSetting.AutoSave then
-								
-                                warn("saving")
-							end
+                            Config[ValueName] = value
 						end
 					end
 
@@ -2421,8 +2455,8 @@ function verny.create(Settings)
 							number_text.Text = tostring(value)
 							Config[ValueName] = value
 							callback(value)
+							print("a")
 							if ConfigSetting.AutoSave then
-								
                                 warn("saving")
 							end
 						else
@@ -2430,6 +2464,7 @@ function verny.create(Settings)
 							Config[ValueName] = value
 							number_text.Text = tostring(value)
 							callback(value)
+							print("b")
 							if ConfigSetting.AutoSave then
 								
                                 warn("saving")
@@ -2500,6 +2535,8 @@ function verny.create(Settings)
 					end)
 
 					function sliderfunc:Set(value)
+						if type(value) ~= "number" and type(value) == "string" then local value = tonumber(value) end
+						local value = tonumber(value)
 						local pos = UDim2.new(math.clamp((value) / Max, 0, 1), 0, 0.5, 0)
 						SliderValueFrame_2:TweenPosition(pos, "Out", "Sine", 0.25, true)
 						SliderValueFrame:TweenSize(UDim2.new((value or 0) / Max, 0, 0, 25), "Out", "Sine", 0.2, true)
@@ -2512,10 +2549,6 @@ function verny.create(Settings)
 						end
 						Config[ValueName] = tonumber(number_text.Text)
 						callback(number_text.Text)
-						if ConfigSetting.AutoSave then
-							
-							warn("saving")
-						end
 					end
 					return sliderfunc
 				end
@@ -2583,9 +2616,10 @@ function verny.create(Settings)
 						TextSize = 12.000,
 						TextTransparency = 0.9,
 						TextWrapped = false,
-						TextXAlignment = Enum.TextXAlignment.Right,
+						TextXAlignment = Enum.TextXAlignment.Left,
 						ClipsDescendants = true,
-						Size = UDim2.new(0, 52, 0, PlaceholderText.TextBounds.X)
+						Size = UDim2.new(0, 52, 0, 26),
+                        Position = UDim2.new(0.07, 0, 0, 0),
 					})
 
 					if Config[ValueName] ~= nil then
@@ -2612,7 +2646,7 @@ function verny.create(Settings)
 						tween(textboxholderframe,0.2,Enum.EasingStyle.Quart,{Position = UDim2.new(0.821052611, 0, 0.184210524, 0)})
 						tween(textboxholderframe,0.2,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 58, 0, 25)})
 						tween(textbox,0.2,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 52, 0, 25)})
-						tween(textbox,0.2,Enum.EasingStyle.Quart,{Position = UDim2.new(0, 0, 0, 0)})
+						tween(textbox,0.2,Enum.EasingStyle.Quart,{Position = UDim2.new(0.07, 0, 0, 0)})
 						if ep then
 							if #textbox.Text > 0 then
 								Config[ValueName] = textbox.Text
@@ -2623,6 +2657,26 @@ function verny.create(Settings)
 							end
 						end
 					end)
+
+                    local textboxfunc = {}
+
+                    function textboxfunc:Set(Value)
+						
+                        if textbox.Text ~= tostring(Value) then
+							textbox.Text = tostring(Value)
+                            Config[ValueName] = textbox.Text
+                            pcall(callback, textbox.Text)
+                        end
+
+						if textbox.PlaceholderText ~= tostring(Value) then
+							textbox.PlaceholderText = tostring(Value)
+                            Config[ValueName] = textbox.Text
+                            pcall(callback, textbox.Text)
+                        end
+
+                    end
+
+                    return textboxfunc
 				end
 
 				function Item.Label(options)
