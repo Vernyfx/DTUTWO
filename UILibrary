@@ -1,5 +1,5 @@
 _G.doneLoading = false
-print("nice")
+print("nice try")
 if not _G.WFH then
     _G.WFH = true
     local old;
@@ -74,10 +74,7 @@ function verny:Savefile(ConfigTable)
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
 			pcall(function()
-				local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
-				if not Success then
-					return {false,"Somethings error pls try again."..debug.traceback()}
-				end
+				local data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
 				writefile(FolderName..'/'..FileName..".json",data)
 				return {true,"Success to readfile"}
 			end)
