@@ -76,10 +76,7 @@ function verny:Savefile(ConfigTable)
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
 			xpcall(function()
-				local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
-				if not Success then
-					return {false,"Somethings error pls try again."..debug.traceback()}
-				end
+				local data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
 				writefile(FolderName..'/'..FileName..".json",data)
 				return {true,"Success to readfile"}
 			end,function(x)
