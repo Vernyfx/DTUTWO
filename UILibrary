@@ -63,25 +63,6 @@ function verny:CreateFile(ConfigTable)
 		return {true,"Folder Created."}
 	end
 end
-function verny:LoadFile(ConfigTable)
-	local FileName = ConfigSetting.FileName or "Next"
-	local FolderName = ConfigSetting.FolderName or "NextJs"
-	if not isfolder(FolderName) then
-		verny:CreateFile(HttpService:JSONEncode(ConfigTable))
-	end
-	if not isfile(FolderName..'/'..FileName..".json") then
-		verny:CreateFile(HttpService:JSONEncode(ConfigTable))
-		return {false,"Somethings error pls try again."..debug.traceback()}
-	else
-		xpcall(function()
-			local data = game:GetService("HttpService"):JSONDecode(readfile(FolderName..'/'..FileName..".json"))
-			Config = data
-			return {true,data}
-		end,function(x)
-			return {false,x}
-		end)
-	end
-end
 
 function verny:Savefile(ConfigTable)
 	if _G.doneLoading then
