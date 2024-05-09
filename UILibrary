@@ -54,10 +54,8 @@ function verny:CreateFile(ConfigTable)
 		makefolder(FolderName) -- [[u can change folder name ]]
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		xpcall(function()
+		pcall(function()
 			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(ConfigTable) or tostring("[]"))
-		end,function(x)
-			return {false,x}
 		end)
 	else
 		return {true,"Folder Created."}
@@ -75,12 +73,13 @@ function verny:Savefile(ConfigTable)
 			self:CreateFile(HttpService:JSONEncode(ConfigTable))
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
-			xpcall(function()
-				local data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
+			pcall(function()
+				local Success,data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
+				if not Success then
+					return {false,"Somethings error pls try again."..debug.traceback()}
+				end
 				writefile(FolderName..'/'..FileName..".json",data)
 				return {true,"Success to readfile"}
-			end,function(x)
-				return {false,x}
 			end)
 		end
 	end
