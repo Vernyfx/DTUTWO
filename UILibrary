@@ -1,10 +1,10 @@
-_G.doneLoading = false
+local doneLoading = false
 
 if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
-        if _G.doneLoading then
+        if doneLoading then
             return old(...)
         else
             print("writefile blocked")
@@ -63,7 +63,7 @@ function verny:CreateFile(ConfigTable)
 end
 
 function verny:Savefile(ConfigTable)
-	if _G.doneLoading then
+	if doneLoading then
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
@@ -83,9 +83,6 @@ function verny:Savefile(ConfigTable)
 end
 
 function verny:LoadConfig(ConfigFile)
-	for i,v in pairs(game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))) do
-		warn(i,v)
-	end
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
@@ -94,7 +91,7 @@ function verny:LoadConfig(ConfigFile)
 		end)
     end
 
-	_G.doneLoading = true
+	doneLoading = true
 end
 
 -- [Abbreviate]
