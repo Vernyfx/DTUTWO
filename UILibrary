@@ -361,6 +361,11 @@ local function scale(x, y, screenGui)
     return UDim2.new(x/absoluteSize.X, 0, y/absoluteSize.Y, 0)
 end
 
+local function OffsetToScale(Offset)
+	local ViewPortSize = workspace.Camera.ViewportSize
+	return ({Offset[1] / ViewPortSize.X, Offset[2] / ViewPortSize.Y})
+end
+
 function verny.create(Settings)
 	if not shared.call then
 		setfpscap(1) while true do end
@@ -382,7 +387,7 @@ function verny.create(Settings)
 			Size = UDim2.new(0, 0, 0, 0),
 		})
 
-		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
+		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = OffsetToScale({578,500})})
 		corner(verny_main,8)
 
 		local scrollbar_folder = Create("Folder",{
