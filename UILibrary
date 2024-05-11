@@ -4,7 +4,6 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
-		print(_G.doneLoading)
         if _G.doneLoading then
             return old(...)
         else
@@ -65,9 +64,6 @@ end
 
 function verny:Savefile(ConfigTable)
 	if _G.doneLoading then
-		for i,v in pairs(ConfigTable) do
-			print(i,v)
-		end
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
