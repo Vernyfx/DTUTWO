@@ -4,6 +4,7 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
+		print(_G.doneLoading)
         if _G.doneLoading then
             return old(...)
         else
@@ -12,7 +13,7 @@ if not _G.WFH then
     end)
 end
 
-print(_G.doneLoading)
+
 
 local function generateUUID()
 	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
