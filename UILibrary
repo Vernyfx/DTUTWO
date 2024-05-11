@@ -65,6 +65,7 @@ end
 
 function verny:Savefile(ConfigTable)
 	if _G.doneLoading then
+		print("test")
 		for i,v in pairs(ConfigTable) do
 			print(i,v)
 		end
