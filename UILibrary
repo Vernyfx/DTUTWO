@@ -55,13 +55,13 @@ function verny:CreateFile(ConfigTable)
 		makefolder(FolderName) -- [[u can change folder name ]]
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
-		pcall(function()
+		--pcall(function()
 			print("hi ezz")
 			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(ConfigTable) or tostring("[]"))
 			for i,v in pairs(game.HttpService:JSONEncode(ConfigTable)) do
 				print(i,v,"ez")
 			end
-		end)
+		--end)
 	else
 		return {true,"Folder Created."}
 	end
