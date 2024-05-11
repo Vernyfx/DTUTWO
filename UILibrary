@@ -47,6 +47,7 @@ end
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
 local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub_'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
+
 function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
@@ -55,7 +56,11 @@ function verny:CreateFile(ConfigTable)
 	end
 	if not isfile(FolderName..'/'..FileName..".json") then
 		pcall(function()
+			print("hi ezz")
 			writefile(FolderName..'/'..FileName..".json",game.HttpService:JSONEncode(ConfigTable) or tostring("[]"))
+			for i,v in pairs(game.HttpService:JSONEncode(ConfigTable)) do
+				print(i,v,"ez")
+			end
 		end)
 	else
 		return {true,"Folder Created."}
@@ -67,10 +72,10 @@ function verny:Savefile(ConfigTable)
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
-			self:CreateFile(HttpService:JSONEncode(ConfigTable))
+			verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 		end
 		if not isfile(FolderName..'/'..FileName..".json") then
-			self:CreateFile(HttpService:JSONEncode(ConfigTable))
+			verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
 			pcall(function()
