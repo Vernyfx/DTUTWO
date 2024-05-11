@@ -4,6 +4,7 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
+		print(doneLoading)
         if doneLoading then
             return old(...)
         else
@@ -63,6 +64,7 @@ function verny:CreateFile(ConfigTable)
 end
 
 function verny:Savefile(ConfigTable)
+	print(doneLoading)
 	if doneLoading then
 		print(ConfigTable)
 		local FolderName = ConfigSetting.FolderName or "NextJs"
