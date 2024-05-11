@@ -387,7 +387,14 @@ function verny.create(Settings)
 			Size = UDim2.new(0, 0, 0, 0),
 		})
 
-		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = OffsetToScale({578,500})})
+		local isTouchDevice = game:GetService("UserInputService").TouchEnabled
+
+		if isTouchDevice then
+			tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 378, 0, 300)})
+		else
+			tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
+		end
+		
 		corner(verny_main,8)
 
 		local scrollbar_folder = Create("Folder",{
@@ -877,7 +884,11 @@ function verny.create(Settings)
 					uitoggled = true
 					tween(verny_main,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 0)})
 				else
-					tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
+					if isTouchDevice then
+						tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 378, 0, 300)})
+					else
+						tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
+					end
 					repeat wait() until verny_main.Size == UDim2.new(0, 578, 0, 500)
 					uitoggled = false
 				end
