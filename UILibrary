@@ -2472,7 +2472,7 @@ function verny.create(Settings)
 
 					slidervalueframe.InputBegan:Connect(
 						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputService.TouchEnabled then
+							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.TouchEnabled then
 								dragging = true
 								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 							end
@@ -2480,7 +2480,7 @@ function verny.create(Settings)
 					)
 					slidervalueframe.InputEnded:Connect(
 						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputService.TouchEnabled then
+							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.TouchEnabled then
 								dragging = false
 								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							end
@@ -2490,7 +2490,7 @@ function verny.create(Settings)
 
 					SliderValueFrame.InputBegan:Connect(
 						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputService.TouchEnabled then
+							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.TouchEnabled then
 								dragging = true
 								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
 							end
@@ -2498,7 +2498,7 @@ function verny.create(Settings)
 					)
 					SliderValueFrame.InputEnded:Connect(
 						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputService.TouchEnabled then
+							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.TouchEnabled then
 								dragging = false
 								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							end
