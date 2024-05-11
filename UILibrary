@@ -1088,31 +1088,6 @@ function verny.create(Settings)
 				end
 			end)
 			
-			-- For mobile touch input
-			buttonbar.TouchStarted:Connect(function()
-				if mainpage.Name == name.."_mainpage" then
-					UIPageLayout:JumpToIndex(mainpage.LayoutOrder)
-				end
-			
-				for i,v in pairs(scrollingbar:GetChildren()) do
-					if v:IsA("Frame") and v.Name == "framebar" then
-						tween(v, 0.5, Enum.EasingStyle.Back, {BackgroundTransparency = 1})
-						for i,v in pairs(v:GetChildren()) do
-							if v.Name == "titlebar" or v.Name == "descbar" then
-								tween(v, 0.5, Enum.EasingStyle.Back, {TextTransparency = 0.45})
-							end
-							if v.Name == "imagebar" then
-								tween(v, 0.5, Enum.EasingStyle.Back, {ImageTransparency = 0.45})
-							end
-						end
-					end
-					tween(imagebar, 0.5, Enum.EasingStyle.Back, {ImageTransparency = 0})
-					tween(descbar, 0.5, Enum.EasingStyle.Back, {TextTransparency = 0})
-					tween(titlebar, 0.5, Enum.EasingStyle.Back, {TextTransparency = 0})
-					tween(framebar, 0.5, Enum.EasingStyle.Back, {BackgroundTransparency = 0})
-				end
-			end)
-			
 			if not focus then
 				focus = true
 				mainpage.Name = name.."_mainpage"
