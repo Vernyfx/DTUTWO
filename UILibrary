@@ -4,7 +4,6 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
-		print(doneLoading)
         if doneLoading then
             return old(...)
         else
@@ -47,7 +46,7 @@ end
 --[Save Module]
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
-local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub_'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
+local ConfigSetting = {FileName="Settings.json",AutoSave=true,FolderName='WingHub_'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
 function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
 	local FolderName = ConfigSetting.FolderName or "NextJs"
@@ -66,7 +65,9 @@ end
 function verny:Savefile(ConfigTable)
 	print(doneLoading)
 	if doneLoading then
-		print(ConfigTable)
+		for i,v in pairs(ConfigTable) do
+			warn(i,v)
+		end
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
@@ -86,7 +87,6 @@ function verny:Savefile(ConfigTable)
 end
 
 function verny:LoadConfig(ConfigFile)
-	print("config is not working :c")
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
