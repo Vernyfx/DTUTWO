@@ -13,8 +13,6 @@ if not _G.WFH then
     end)
 end
 
-
-
 local function generateUUID()
 	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
 	return string.gsub(template, '[xy]', function (c)
@@ -66,7 +64,7 @@ function verny:CreateFile(ConfigTable)
 end
 
 function verny:Savefile(ConfigTable)
-	if not _G.doneLoading then
+	if _G.doneLoading then
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
