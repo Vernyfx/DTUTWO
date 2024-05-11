@@ -2470,40 +2470,28 @@ function verny.create(Settings)
 
 					local dragging = false
 
-					slidervalueframe.InputBegan:Connect(
-						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.Touch then
-								dragging = true
-								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
-							end
+					-- Function to handle input for both mouse and touch
+					local function HandleInput(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+							dragging = true
+							tween(texthead, 0.2, Enum.EasingStyle.Quart, {TextTransparency = 0})
 						end
-					)
-					slidervalueframe.InputEnded:Connect(
-						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.Touch then
-								dragging = false
-								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
-							end
-						end
-					)
+					end
 
+					-- Function to handle input end for both mouse and touch
+					local function HandleInputEnd(input)
+						if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+							dragging = false
+							tween(texthead, 0.2, Enum.EasingStyle.Quart, {TextTransparency = 0.45})
+						end
+					end
 
-					SliderValueFrame.InputBegan:Connect(
-						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.Touch then
-								dragging = true
-								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0})
-							end
-						end
-					)
-					SliderValueFrame.InputEnded:Connect(
-						function(input)
-							if input.UserInputType == Enum.UserInputType.MouseButton1 or Enum.UserInputType.Touch then
-								dragging = false
-								tween(texthead,0.2,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
-							end
-						end
-					)
+					slidervalueframe.InputBegan:Connect(HandleInput)
+					slidervalueframe.InputEnded:Connect(HandleInputEnd)
+
+					SliderValueFrame.InputBegan:Connect(HandleInput)
+					SliderValueFrame.InputEnded:Connect(HandleInputEnd)
+
 					game:GetService("UserInputService").InputChanged:Connect(function(input)
 						if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
 							move(input)
