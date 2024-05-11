@@ -84,6 +84,7 @@ end
 
 function verny:LoadConfig(ConfigFile)
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
+	print(Data)
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
 			print(FlagName)
