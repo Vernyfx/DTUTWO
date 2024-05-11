@@ -4,7 +4,7 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
-        if _G.doneLoading then
+        if not _G.doneLoading then
             return old(...)
         else
             print("writefile blocked")
@@ -88,12 +88,16 @@ function verny:LoadConfig(ConfigFile)
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
-			_G[FlagName]:Set(FlagValue)
+			if _G[FlagName] then
+				print(_G[FlagName])
+				_G[FlagName]:Set(FlagValue)
+			end
 		end)
     end
 
 	_G.doneLoading = true
 end
+
 -- [Abbreviate]
 
 function Abbreviate(x)
