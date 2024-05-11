@@ -4,13 +4,15 @@ if not _G.WFH then
     _G.WFH = true
     local old;
     old = hookfunction(writefile, function(...)
-        if not _G.doneLoading then
+        if _G.doneLoading then
             return old(...)
         else
             print("writefile blocked")
         end
     end)
 end
+
+print(_G.doneLoading)
 
 local function generateUUID()
 	local template ='xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'
