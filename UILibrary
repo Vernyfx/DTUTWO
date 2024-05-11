@@ -64,6 +64,7 @@ end
 
 function verny:Savefile(ConfigTable)
 	if doneLoading then
+		print(ConfigTable)
 		local FolderName = ConfigSetting.FolderName or "NextJs"
 		local FileName = ConfigSetting.FileName or "Next"
 		if not isfolder(FolderName) then
@@ -83,6 +84,7 @@ function verny:Savefile(ConfigTable)
 end
 
 function verny:LoadConfig(ConfigFile)
+	print("config is not working :c")
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
