@@ -2194,7 +2194,7 @@ function verny.create(Settings)
 						Config[ValueName] = Default
 					end
 					togglebutton.MouseButton1Down:Connect(function()
-						print(togglefocus)
+
 						if not togglefocus then
 							Config[ValueName] = true
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 23, 0, 23)})
@@ -2429,7 +2429,7 @@ function verny.create(Settings)
 							number_text.Text = tostring(value)
 							Config[ValueName] = value
 							callback(value)
-							print("a")
+
 							if ConfigSetting.AutoSave then
                                 warn("saving")
 							end
@@ -2438,7 +2438,7 @@ function verny.create(Settings)
 							Config[ValueName] = value
 							number_text.Text = tostring(value)
 							callback(value)
-							print("b")
+
 							if ConfigSetting.AutoSave then
 								
                                 warn("saving")
