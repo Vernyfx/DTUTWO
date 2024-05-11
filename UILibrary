@@ -83,8 +83,10 @@ function verny:Savefile(ConfigTable)
 end
 
 function verny:LoadConfig(ConfigFile)
+	for i,v in pairs(game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))) do
+		warn(i,v)
+	end
     local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
-	print(Data)
     for FlagName, FlagValue in pairs(Data) do
 		task.spawn(function()
 			print(FlagName)
