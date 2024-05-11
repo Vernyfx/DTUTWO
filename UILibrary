@@ -78,11 +78,12 @@ function verny:Savefile(ConfigTable)
 			verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
-			pcall(function()
+			--pcall(function()
+				print("rip bruh")
 				local data = pcall(game.HttpService.JSONEncode,game.HttpService,ConfigTable)
 				writefile(FolderName..'/'..FileName..".json",data)
 				return {true,"Success to readfile"}
-			end)
+			--end)
 		end
 	end
 end
