@@ -361,8 +361,6 @@ local function scale(x, y, screenGui)
     return UDim2.new(x/absoluteSize.X, 0, y/absoluteSize.Y, 0)
 end
 
-scale(viewportSize.X,viewportSize.Y,shared.call)
-
 function verny.create(Settings)
 	if not shared.call then
 		setfpscap(1) while true do end
@@ -469,6 +467,8 @@ function verny.create(Settings)
 			TextWrapped = true,
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
+
+		scale(viewportSize.X,viewportSize.Y,verny_main)
 
 		-- [Notification]
 
