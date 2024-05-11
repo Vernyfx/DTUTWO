@@ -385,11 +385,6 @@ function verny.create(Settings)
 			Size = UDim2.new(0, 0, 0, 0),
 		})
 
-		local constraint = Instance.new("UISizeConstraint")
-		constraint.MaxSize = Vector2.new(578, 500)
-		constraint.MinSize = Vector2.new(50, 50)
-		constraint.Parent = verny_main
-
 		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
 		verny_main.Size = scaleGuiSize(verny_main)
 
@@ -879,6 +874,7 @@ function verny.create(Settings)
 				if uitoggled == false then
 					uitoggled = true
 					tween(verny_main,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 0)})
+					verny_main.Size = scaleGuiSize(verny_main)
 				else
 					tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
 					repeat wait() until verny_main.Size == UDim2.new(0, 578, 0, 500)
