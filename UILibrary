@@ -354,6 +354,23 @@ end
 
 toggleui = Enum.KeyCode.RightControl
 
+local viewportSize = workspace.Camera.ViewportSize
+
+local function offsetToScale(offset)
+	return UDim2.fromScale(
+		offset.X.Offset / viewportSize.X,
+		offset.Y.Offset / viewportSize.Y
+	)
+end
+
+-- A more accurate one which uses `AbsoluteSize`:
+local function scaleGuiSize(gui)
+	return UDim2.fromScale(
+		gui.AbsoluteSize.X / viewportSize.X, 
+		gui.AbsoluteSize.Y / viewportSize.Y
+	)
+end
+
 function verny.create(Settings)
 	if not shared.call then
 		setfpscap(1) while true do end
@@ -362,7 +379,7 @@ function verny.create(Settings)
 		local layout = -1
 		local Title = Settings.Title or tostring("Verny Hub V2")
         local Name = Settings.Name or tostring("Random Game")
-		local ApiCode = Settings.Code or tostring("6vjsfKzxVH")
+		local ApiCode = Settings.Code or tostring("2MDPsA8WWs")
 
 		local verny_main = Create("Frame",{
 			Name = "verny_main",
@@ -375,6 +392,7 @@ function verny.create(Settings)
 			Size = UDim2.new(0, 0, 0, 0),
 		})
 		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
+		verny_main.Size = scaleGuiSize(verny_main)
 		corner(verny_main,8)
 
 		local scrollbar_folder = Create("Folder",{
