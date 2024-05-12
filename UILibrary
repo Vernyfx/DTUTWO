@@ -1044,7 +1044,7 @@ function verny.create(Settings)
 				Active = true,
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
-				Size = UDim2.new(0, 409, 0, 501),
+				Size = OffsetToScale({409,501}),
 				LayoutOrder = layout
 			})
 
@@ -1055,7 +1055,7 @@ function verny.create(Settings)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
 				BorderSizePixel = 0,
-				Size = UDim2.new(0, 409, 0, 501),
+				Size = OffsetToScale({409,501}),
 				ScrollBarThickness = 0,
 			})
 
@@ -1119,7 +1119,7 @@ function verny.create(Settings)
 					BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 					BackgroundTransparency = 1.000,
 					Position = UDim2.new(0.020833334, 0, 0.0199600793, 0),
-					Size = UDim2.new(0, 389, 0, 29),
+					Size = OffsetToScale({389,29}),
 				})
 
 				local section_text = Create("TextLabel",{
@@ -1130,7 +1130,7 @@ function verny.create(Settings)
 					BackgroundTransparency = 1.000,
 					BorderSizePixel = 0,
 					Position = UDim2.new(0.002, 0, 0, 0),
-					Size = UDim2.new(0, 380, 0, 29),
+					Size = OffsetToScale({380,29}),
 					FontFace = Font.fromId(12187365977),
 					Text = tostring(Title),
 					TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -1147,7 +1147,7 @@ function verny.create(Settings)
 					BackgroundColor3 = Color3.fromRGB(35, 35, 35),
 					BackgroundTransparency = 1.000,
 					Position = UDim2.new(0.020833334, 0, 0.0878243521, 0),
-					Size = UDim2.new(0, 389, 0, 44),
+					Size = OffsetToScale({389,44}),
 				})
 				corner(page,8)
 
@@ -1167,9 +1167,9 @@ function verny.create(Settings)
 
 				game:GetService("RunService").Stepped:Connect(function()
 					pcall(function()
-						scrollingmainpage.CanvasSize = UDim2.new(0,0,0,scrollingmainpage_uilistlayout.AbsoluteContentSize.Y + 25)
-						scrollingbar.CanvasSize = UDim2.new(0,0,0,scrollingbar_uilistlayout.AbsoluteContentSize.Y + 5)
-						page.Size = UDim2.new(0,457,0,44 + page_uilistlayout.AbsoluteContentSize.Y - 40)
+						scrollingmainpage.CanvasSize = OffsetToScale({0,scrollingmainpage_uilistlayout.AbsoluteContentSize.Y + 25})
+						scrollingbar.CanvasSize = OffsetToScale({0,scrollingbar_uilistlayout.AbsoluteContentSize.Y + 5})
+						page.Size = OffsetToScale({457,page_uilistlayout.AbsoluteContentSize.Y + 4})
 					end)
 				end)
 
@@ -1190,7 +1190,7 @@ function verny.create(Settings)
 						BackgroundColor3 = Color3.fromRGB(35, 35, 35),
 						ClipsDescendants = true,
 						Position = UDim2.new(0, 0, 0.113636367, 0),
-						Size = UDim2.new(0, 380, 0, 38),
+						Size = OffsetToScale({380,38}),
 					})
 					stroke(dropdownframe,0,1,Color3.fromRGB(50,50,50))
 					corner(dropdownframe,4)
@@ -1199,7 +1199,7 @@ function verny.create(Settings)
 						Parent = dropdownframe,
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 1.000,
-						Size = UDim2.new(0, 380, 0, 38),
+						Size = OffsetToScale({380,38}),
 						Font = Enum.Font.SourceSans,
 						Text = "",
 						TextColor3 = Color3.fromRGB(0, 0, 0),
@@ -1212,7 +1212,7 @@ function verny.create(Settings)
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 1.000,
 						Position = UDim2.new(0.0225080382, 0, 0, 0),
-						Size = UDim2.new(0, 246, 0, 38),
+						Size = OffsetToScale({246,38}),
 						FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 14.000,
@@ -1229,7 +1229,7 @@ function verny.create(Settings)
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 1.000,
 						Position = UDim2.new(1.4, 0, 0.5, 0),
-						Size = UDim2.new(0, 20, 0, 20),
+						Size = OffsetToScale({20,20}),
 						Image = "http://www.roblox.com/asset/?id=6034818372",
 						ImageColor3 = Color3.fromRGB(79, 79, 79),
 					})
@@ -1241,7 +1241,7 @@ function verny.create(Settings)
 						BackgroundTransparency = 1.000,
 						AnchorPoint = Vector2.new(0.5, 0.5),
 						Position = UDim2.new(1.1, 0, 0.5, 0),
-						Size = UDim2.new(0, 126, 0, 20),
+						Size = OffsetToScale({126,20}),
 						FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 12.000,
