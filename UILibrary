@@ -467,8 +467,6 @@ function verny.create(Settings)
 			TextXAlignment = Enum.TextXAlignment.Left,
 		})
 
-		scale(viewportSize.X,viewportSize.Y,verny_main)
-
 		-- [Notification]
 
 		local notificationlist = Create("Frame",{
