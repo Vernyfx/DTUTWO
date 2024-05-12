@@ -169,6 +169,11 @@ local ActualTypes = {
 	Circle = "ImageLabel",
 }
 
+local function OffsetToScale(Offset)
+	local ViewPortSize = workspace.Camera.ViewportSize
+	return UDim2.fromScale(Offset[1] / ViewPortSize.X, Offset[2] / ViewPortSize.Y)
+end
+
 local Properties = {
 	Shadow = {
 		Name = "Shadow",
@@ -231,7 +236,7 @@ local function CircleAnim(GuiObject, EndColour, StartColour)
 	Circle.ZIndex = 200
 	Circle.Parent = GuiObject
 	local Size = GuiObject.AbsoluteSize.X
-	TweenService:Create(Circle, TweenInfo.new(0.5), {Position = UDim2.fromScale(PX,PY) - UDim2.fromOffset(Size/2,Size/2), ImageTransparency = 1, ImageColor3 = EndColour, Size = UDim2.fromOffset(Size,Size)}):Play()
+	TweenService:Create(Circle, TweenInfo.new(0.5), {Position = UDim2.fromScale(PX,PY) - UDim2.fromOffset(Size/2,Size/2), ImageTransparency = 1, ImageColor3 = EndColour, Size = OffsetToScale({Size,Size})}):Play()
 	spawn(function()
 		wait(0.5)
 		Circle:Destroy()
@@ -354,18 +359,6 @@ end
 
 toggleui = Enum.KeyCode.RightControl
 
-local viewportSize = workspace.Camera.ViewportSize
-
-local function scale(x, y, screenGui)
-    local absoluteSize = screenGui.AbsoluteSize
-    return UDim2.new(x/absoluteSize.X, 0, y/absoluteSize.Y, 0)
-end
-
-local function OffsetToScale(Offset)
-	local ViewPortSize = workspace.Camera.ViewportSize
-	return UDim2.fromScale(Offset[1] / ViewPortSize.X, Offset[2] / ViewPortSize.Y)
-end
-
 function verny.create(Settings)
 	if not shared.call then
 		setfpscap(1) while true do end
@@ -387,14 +380,7 @@ function verny.create(Settings)
 			Size = UDim2.new(0, 0, 0, 0),
 		})
 
-		local isTouchDevice = game:GetService("UserInputService").TouchEnabled
-
-		if isTouchDevice then
-			tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 378, 0, 300)})
-		else
-			tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
-		end
-		
+		tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = OffsetToScale({578,500})})
 		corner(verny_main,8)
 
 		local scrollbar_folder = Create("Folder",{
@@ -407,14 +393,15 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			ClipsDescendants = true,
-			Size = UDim2.new(0, 169, 0, 500),
+			
+			Size = OffsetToScale({169,500}),
 		})
 		local scrollbar_main = Create("Frame",{
 			Name = "scrollbar_main",
 			Parent = scrollbar_anchor_frame,
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			Position = UDim2.new(0, 0, -3.05175796e-08, 0),
-			Size = UDim2.new(0, 170, 0, 500),
+			Size = OffsetToScale({179,500}),
 		})
 		corner(scrollbar_main,8)
 		MakeDraggable(scrollbar_main,verny_main)
@@ -424,7 +411,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(30, 30, 30),
 			BorderSizePixel = 0,
 			Position = UDim2.new(0.925429761, 0, 0, 0),
-			Size = UDim2.new(0, 12, 0, 500),
+			Size = OffsetToScale({12,500}),
 		})
 		local title_verny = Create("TextLabel",{
 			Name = "title_verny",
@@ -433,7 +420,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			Position = UDim2.new(0.047, 0, 0.062, 0),
-			Size = UDim2.new(0, 144, 0, 23),
+			Size = OffsetToScale({144,23}),
 			FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 			Text = tostring(Title),
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -454,7 +441,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			Position = UDim2.new(0.0470588282, 0, 0.0960000008, 0),
-			Size = UDim2.new(0, 144, 0, 23),
+			Size = OffsetToScale({144,23}),
 			FontFace = Font.fromId(12187365977),
 			Text = tostring(Name),
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -471,7 +458,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			Position = UDim2.new(0.052941177, 0, 0.142000005, 0),
-			Size = UDim2.new(0, 152, 0, 23),
+			Size = OffsetToScale({152,23}),
 			FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 			Text = "Contact us",
 			TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -491,7 +478,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			Position = UDim2.new(0, 0, 0.00243902439, 0),
-			Size = UDim2.new(0.0113065327, 0, 0.997560978, 0),
+			Size = OffsetToScale({0.0113,0.998}),
 		})
 
 		local notificationlist_uilistlayout = Create("UIListLayout",{
@@ -529,10 +516,10 @@ function verny.create(Settings)
 				mainnotification.Active = true
 				mainnotification.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 				mainnotification.Position = UDim2.new(0.277777791, 0, 0.922982872, 0)
-				mainnotification.Size = UDim2.new(0, 0, 0, 58)
+				mainnotification.Size = OffsetToScale({0,53})
 				mainnotification.ClipsDescendants = true
 
-				tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 332, 0, 58)})
+				tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = OffsetToScale({332,58})})
 
 				mainnotification_uicorner.CornerRadius = UDim.new(0, 6)
 				mainnotification_uicorner.Name = "mainnotification_uicorner"
@@ -545,7 +532,7 @@ function verny.create(Settings)
 				logo_noti.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				logo_noti.BackgroundTransparency = 1.000
 				logo_noti.Position = UDim2.new(0.0662650615, 0, 0.362068951, 0)
-				logo_noti.Size = UDim2.new(0, 20, 0, 20)
+				logo_noti.Size = OffsetToScale({20,20})
 				logo_noti.Image = "http://www.roblox.com/asset/?id=6022668898"
 				logo_noti.ImageTransparency = 1
 
@@ -555,7 +542,7 @@ function verny.create(Settings)
 				title_noti.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				title_noti.BackgroundTransparency = 1.000
 				title_noti.Position = UDim2.new(0.122359954, 0, 0.148207039, 0)
-				title_noti.Size = UDim2.new(0, 249, 0, 23)
+				title_noti.Size = OffsetToScale({249,23})
 				title_noti.FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold)
 				title_noti.Text = tostring(Title)
 				title_noti.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -574,7 +561,7 @@ function verny.create(Settings)
 				desc_noti.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				desc_noti.BackgroundTransparency = 1.000
 				desc_noti.Position = UDim2.new(0.0319986008, 0, 0.544275761, 0)
-				desc_noti.Size = UDim2.new(0, 305, 0, 23)
+				desc_noti.Size = OffsetToScale({305,23})
 				desc_noti.FontFace = Font.fromId(12187365977)
 				desc_noti.Text = tostring(Desc)
 				desc_noti.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -588,7 +575,7 @@ function verny.create(Settings)
 				closebutton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				closebutton.BackgroundTransparency = 1.000
 				closebutton.Position = UDim2.new(0.912650585, 0, 0.172413796, 0)
-				closebutton.Size = UDim2.new(0, 20, 0, 20)
+				closebutton.Size = OffsetToScale({20,20})
 				closebutton.Image = "http://www.roblox.com/asset/?id=6031094678"
 				closebutton.ImageTransparency = 1
 
@@ -598,7 +585,7 @@ function verny.create(Settings)
 					tween(desc_noti,0.5,Enum.EasingStyle.Quart,{TextTransparency = 1})
 					tween(closebutton,0.5,Enum.EasingStyle.Quart,{ImageTransparency = 1})
 					repeat wait() until closebutton.ImageTransparency == 1
-					tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 58)})
+					tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = OffsetToScale({0,58})})
 					repeat wait() until mainnotification.Size == UDim2.new(0, 0, 0, 58)
 					wait(.2)
 					mainnotification:Destroy()
@@ -616,7 +603,7 @@ function verny.create(Settings)
 					tween(desc_noti,0.5,Enum.EasingStyle.Quart,{TextTransparency = 1})
 					tween(closebutton,0.5,Enum.EasingStyle.Quart,{ImageTransparency = 1})
 					repeat wait() until closebutton.ImageTransparency == 1
-					tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 58)})
+					tween(mainnotification,0.5,Enum.EasingStyle.Quart,{Size = OffsetToScale({0,58})})
 					repeat wait() until mainnotification.Size == UDim2.new(0, 0, 0, 58)
 					wait(.2)
 					mainnotification:Destroy()
@@ -647,7 +634,7 @@ function verny.create(Settings)
 				notificationcenter.ZIndex = 999
 				notificationcenter.ClipsDescendants = true
 
-				tween(notificationcenter,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 578, 0, 500)})
+				tween(notificationcenter,0.5,Enum.EasingStyle.Quart,{Size = OffsetToScale({578,500})})
 
 				notificationcenter_uicorner.Name = "notificationcenter_uicorner"
 				notificationcenter_uicorner.Parent = notificationcenter
@@ -672,7 +659,7 @@ function verny.create(Settings)
 				title_noticenter.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				title_noticenter.BackgroundTransparency = 1.000
 				title_noticenter.Position = UDim2.new(0.495000005, 0, 0.105999999, 0)
-				title_noticenter.Size = UDim2.new(0, 265, 0, 28)
+				title_noticenter.Size = OffsetToScale({265,28})
 				title_noticenter.FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold)
 				title_noticenter.Text = tostring(Title)
 				title_noticenter.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -687,7 +674,7 @@ function verny.create(Settings)
 				desc_noticenter.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				desc_noticenter.BackgroundTransparency = 1.000
 				desc_noticenter.Position = UDim2.new(0.495000005, 0, 0.495999992, 0)
-				desc_noticenter.Size = UDim2.new(0, 265, 0, 151)
+				desc_noticenter.Size = OffsetToScale({265,151})
 				desc_noticenter.FontFace = Font.fromId(12187365977)
 				desc_noticenter.Text = tostring(Desc)
 				desc_noticenter.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -701,7 +688,7 @@ function verny.create(Settings)
 				closebutton_centernoti.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 				closebutton_centernoti.BorderSizePixel = 0
 				closebutton_centernoti.Position = UDim2.new(0.0566666685, 0, 0.860000014, 0)
-				closebutton_centernoti.Size = UDim2.new(0, 266, 0, 23)
+				closebutton_centernoti.Size = OffsetToScale({266,23})
 				closebutton_centernoti.FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold)
 				closebutton_centernoti.Text = "Submit"
 				closebutton_centernoti.TextColor3 = Color3.fromRGB(255, 255, 255)
@@ -723,7 +710,7 @@ function verny.create(Settings)
 				line_fill_noti.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 				line_fill_noti.BorderSizePixel = 0
 				line_fill_noti.Position = UDim2.new(0.0599999987, 0, 0.808000028, 0)
-				line_fill_noti.Size = UDim2.new(0, 263, 0, 6)
+				line_fill_noti.Size = OffsetToScale({263,6})
 				line_fill_noti.BackgroundTransparency = 1
 
 				line_fill_noti_uicorner.Name = "line_fill_noti_uicorner"
@@ -735,7 +722,7 @@ function verny.create(Settings)
 				line_color.BackgroundColor3 = Color3.fromRGB(100, 200, 239)
 				line_color.BorderSizePixel = 0
 				line_color.Position = UDim2.new(0.0599999987, 0, 0.808000028, 0)
-				line_color.Size = UDim2.new(0, 263, 0, 6)
+				line_color.Size = OffsetToScale({263,6})
 				line_color.BackgroundTransparency = 1
 
 				line_color_uicorner.Name = "line_color_uicorner"
@@ -747,7 +734,7 @@ function verny.create(Settings)
 				dropshadow.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
 				dropshadow.BackgroundTransparency = 1.000
 				dropshadow.Position = UDim2.new(0.228373706, 0, 0.239999995, 0)
-				dropshadow.Size = UDim2.new(0, 315, 0, 263)
+				dropshadow.Size = OffsetToScale({315,263})
 				dropshadow.ZIndex = 0
 				dropshadow.Image = "8068653048"
 				dropshadow.ImageColor3 = Color3.fromRGB(0, 0, 0)
@@ -769,7 +756,7 @@ function verny.create(Settings)
 				end)
 
 				repeat wait() until notificationcenter.Size == UDim2.new(0, 578, 0, 500)
-				tween(notificationcenter_main,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 300, 0, 250)})
+				tween(notificationcenter_main,0.5,Enum.EasingStyle.Quart,{Size = OffsetToScale({300,250})})
 				repeat wait() until notificationcenter_main.Size == UDim2.new(0, 300, 0, 250)
 				tween(dropshadow,0.5,Enum.EasingStyle.Quart,{ImageTransparency = 0})
 				tween(desc_noticenter,0.5,Enum.EasingStyle.Quart,{TextTransparency = 0.450})
@@ -779,7 +766,7 @@ function verny.create(Settings)
 				tween(closebutton_centernoti,0.5,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 				tween(closebutton_centernoti,0.5,Enum.EasingStyle.Quart,{BackgroundTransparency = 0})
 				repeat wait() until closebutton_centernoti.BackgroundTransparency == 0
-				tween(line_color,tonumber(Cooldown),Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 6)})
+				tween(line_color,tonumber(Cooldown),Enum.EasingStyle.Quart,{Size = OffsetToScale({0,6})})
 				delay(tonumber(Cooldown),function()
 					tween(dropshadow,0.5,Enum.EasingStyle.Quart,{ImageTransparency = 1})
 					tween(desc_noticenter,0.5,Enum.EasingStyle.Quart,{TextTransparency = 1})
@@ -803,7 +790,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(35, 35, 35),
 			BorderSizePixel = 0,
 			Position = UDim2.new(0.0470588244, 0, 0.19600001, 0),
-			Size = UDim2.new(0, 154, 0, 21),
+			Size = OffsetToScale({154,21}),
 			AutoButtonColor = false,
 			FontFace = Font.fromId(12187365977),
 			Text = "Join Discord",
@@ -855,7 +842,7 @@ function verny.create(Settings)
 			BackgroundTransparency = 1.000,
 			BorderSizePixel = 0,
 			Position = UDim2.new(0.0469999984, 0, 0.0200000014, 0),
-			Size = UDim2.new(0, 154, 0, 21),
+			Size = OffsetToScale({154,21}),
 			AutoButtonColor = false,
 			FontFace = Font.fromId(12187365977),
 			Text = "["..toggleui.Name.."]",
@@ -882,13 +869,9 @@ function verny.create(Settings)
 			if io.KeyCode == toggleui then
 				if uitoggled == false then
 					uitoggled = true
-					tween(verny_main,0.5,Enum.EasingStyle.Quart,{Size = UDim2.new(0, 0, 0, 0)})
+					tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = OffsetToScale({578,500})})
 				else
-					if isTouchDevice then
-						tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 378, 0, 300)})
-					else
-						tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = UDim2.new(0, 578, 0, 500)})
-					end
+					tween(verny_main,0.5,Enum.EasingStyle.Back,{Size = OffsetToScale({578,500})})
 					repeat wait() until verny_main.Size == UDim2.new(0, 578, 0, 500)
 					uitoggled = false
 				end
@@ -905,7 +888,7 @@ function verny.create(Settings)
 			BackgroundTransparency = 1.000,
 			BorderSizePixel = 0,
 			Position = UDim2.new(0, 0, 0.26, 0),
-			Size = UDim2.new(0, 170, 0, 355),
+			Size = OffsetToScale({170,355}),
 			ScrollBarThickness = 0,
 		})
 
@@ -922,7 +905,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(50, 50, 50),
 			BorderSizePixel = 0,
 			Position = UDim2.new(0.99013567, 0, 0, 0),
-			Size = UDim2.new(0, 1, 0, 500),
+			Size = OffsetToScale({1,500}),
 		})
 
 		local main_folder = Create("Folder",{
@@ -937,7 +920,7 @@ function verny.create(Settings)
 			BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 			BackgroundTransparency = 1.000,
 			Position = UDim2.new(0.294, 0, -3.05175796e-08, 0),
-			Size = UDim2.new(0, 409, 0, 500),
+			Size = OffsetToScale({409,500}),
 		})
 
 		local container_page = Create("Frame",{
@@ -949,7 +932,7 @@ function verny.create(Settings)
 			BackgroundTransparency = 1.000,
 			ClipsDescendants = true,
 			Position = UDim2.new(0.5, 0, 0.5, 0),
-			Size = UDim2.new(0, 409, 0, 500),
+			Size = OffsetToScale({409,500}),
 		})
 
 		local folder_container = Create("Folder",{
@@ -994,7 +977,7 @@ function verny.create(Settings)
 				BackgroundColor3 = Color3.fromRGB(32, 41, 45),
 				BackgroundTransparency = 1,
 				BorderSizePixel = 0,
-				Size = UDim2.new(0, 170, 0, 52),
+				Size = OffsetToScale({170,52}),
 			})
 
 			local buttonbar = Create("TextButton",{
@@ -1002,7 +985,7 @@ function verny.create(Settings)
 				Parent = framebar,
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
-				Size = UDim2.new(0, 169, 0, 52),
+				Size = OffsetToScale({169,52}),
 				Font = Enum.Font.SourceSans,
 				Text = "",
 				TextColor3 = Color3.fromRGB(0, 0, 0),
@@ -1018,7 +1001,7 @@ function verny.create(Settings)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
 				Position = UDim2.new(0.119999997, 0, 0.5, 0),
-				Size = UDim2.new(0, 25, 0, 25),
+				Size = OffsetToScale({25,25}),
 				Image = "http://www.roblox.com/asset/?id="..tonumber(Logo),
 				ImageColor3 = Color3.fromRGB(102, 200, 239),
 				ScaleType = Enum.ScaleType.Fit,
@@ -1030,7 +1013,7 @@ function verny.create(Settings)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
 				Position = UDim2.new(0.260765672, 0, 0.22115384, 0),
-				Size = UDim2.new(0, 118, 0, 15),
+				Size = OffsetToScale({118,15}),
 				FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 				Text = tostring(Title),
 				TextColor3 = Color3.fromRGB(255, 255, 255),
@@ -1045,7 +1028,7 @@ function verny.create(Settings)
 				BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 				BackgroundTransparency = 1.000,
 				Position = UDim2.new(0.261000037, 0, 0.550000131, 0),
-				Size = UDim2.new(0, 119, 0, 17),
+				Size = OffsetToScale({119,17}),
 				FontFace = Font.fromId(12187365977),
 				Text = tostring(Desc),
 				TextColor3 = Color3.fromRGB(255, 255, 255),
