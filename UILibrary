@@ -76,19 +76,19 @@ function verny:Savefile(ConfigTable)
 			verny:CreateFile(HttpService:JSONEncode(ConfigTable))
 			return {false,"Somethings error pls try again."..debug.traceback()}
 		else
-			--pcall(function()
+			pcall(function()
 				local data = game:GetService("HttpService"):JSONEncode(ConfigTable)
 				writefile(FolderName..'/'..FileName..".json",data)
 				print("yesfile")
 				return {true,"Success to readfile"}
-			--end)
+			end)
 		end
 	end
 end
 
 function verny:LoadConfig(ConfigFile)
 	if isfile(ConfigFile) then
-		local Data = game:GeteService("HttpService"):JSONDecode(readfile(ConfigFile))
+		local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
 		for FlagName, FlagValue in pairs(Data) do
 			task.spawn(function()
 				_G[FlagName]:Set(FlagValue)
