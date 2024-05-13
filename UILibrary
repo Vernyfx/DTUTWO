@@ -95,8 +95,8 @@ function verny:LoadConfig(ConfigFile)
 			end)
 		end
 
-	doneLoading = true
 	end
+	doneLoading = true
 end
 
 -- [Abbreviate]
