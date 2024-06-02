@@ -89,7 +89,7 @@ function verny:LoadConfig(ConfigFile)
 		local Data = game:GetService("HttpService"):JSONDecode(readfile(ConfigFile))
 		for FlagName, FlagValue in pairs(Data) do
 			task.spawn(function()
-				_G.Settings.Elements[FlagName]:Set(FlagValue)
+				_G[FlagName]:Set(FlagValue)
 			end)
 		end
 
