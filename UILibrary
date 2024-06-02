@@ -47,7 +47,7 @@ end
 --[Save Module]
 local verny = {}
 local Config = setmetatable({},{ __newindex = function(tables,key,value) rawset(tables,key,value) end})
-local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub_'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
+local ConfigSetting = {FileName="Settings",AutoSave=true,FolderName='WingHub'..game.Players.LocalPlayer.Name .. "/" .. game.GameId}
 
 function verny:CreateFile(ConfigTable)
 	local FileName = ConfigSetting.FileName or "Next"
@@ -66,7 +66,6 @@ end
 
 function verny:Savefile(ConfigTable)
 	if doneLoading then
-		print("ok")
 		local FolderName = ConfigSetting.FolderName
 		local FileName = ConfigSetting.FileName
 		if not isfolder(FolderName) then
@@ -78,7 +77,6 @@ function verny:Savefile(ConfigTable)
 		else
 			--pcall(function()
 				local data = game:GetService("HttpService"):JSONEncode(ConfigTable)
-				print(data)
 				writefile(FolderName..'/'..FileName..".json",data)
 				return {true,"Success to readfile"}
 			--end)
