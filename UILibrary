@@ -2401,7 +2401,7 @@ function verny.create(Settings)
 						BackgroundColor3 = Color3.fromRGB(255, 255, 255),
 						BackgroundTransparency = 1.000,
 						Position = UDim2.new(0.0351544842, 0, 0.196608692, 0),
-						Size = UDim2.new(0, 114, 0, 23),
+						Size = UDim2.new(0, 180, 0, 23),
 						FontFace = Font.fromId(12187365977,Enum.FontWeight.Bold),
 						TextColor3 = Color3.fromRGB(255, 255, 255),
 						TextSize = 14.000,
