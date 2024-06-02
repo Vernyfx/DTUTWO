@@ -66,6 +66,7 @@ end
 
 function verny:Savefile(ConfigTable)
 	if doneLoading then
+		print("ok")
 		local FolderName = ConfigSetting.FolderName
 		local FileName = ConfigSetting.FileName
 		if not isfolder(FolderName) then
