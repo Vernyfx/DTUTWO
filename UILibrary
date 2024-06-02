@@ -1433,7 +1433,7 @@ function verny.create(Settings)
 							Config[ValueName] = MultiDropdown
 							pcall(callback,MultiDropdown)
 							if ConfigSetting.AutoSave then
-                                warn("saving")
+                                
 							end
 						end)
 					end
@@ -1567,7 +1567,7 @@ function verny.create(Settings)
 							Config[ValueName] = MultiDropdown
 							pcall(callback,MultiDropdown)
 							if ConfigSetting.AutoSave then
-                                warn("saving")
+                                
 							end
 						end)
 					end
@@ -1884,7 +1884,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									warn("saving")
+									
 								end
 							end
 							buttonbar.MouseButton1Down:Connect(function()
@@ -1910,7 +1910,7 @@ function verny.create(Settings)
 								textdrop.Text = v
 								callback(v)
 								if ConfigSetting.AutoSave then
-									warn("saving")
+									
 								end
 							end)
 						end
@@ -2033,7 +2033,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									warn("saving")
+									
 								end
 							end
 							buttonbar.MouseButton1Down:Connect(function()
@@ -2060,7 +2060,7 @@ function verny.create(Settings)
 								callback(v)
 								if ConfigSetting.AutoSave then
 									
-									warn("saving")
+									
 								end
 							end)
 						end
@@ -2207,14 +2207,14 @@ function verny.create(Settings)
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0})
 							if ConfigSetting.AutoSave then
 								
-                                warn("saving")
+                                
 							end
 						else
 							Config[ValueName] = false
 							tween(CheckBox2,0.2,Enum.EasingStyle.Back,{Size = UDim2.new(0, 0, 0, 0)})
 							tween(titletoggle,0.25,Enum.EasingStyle.Quart,{TextTransparency = 0.45})
 							if ConfigSetting.AutoSave then
-                                warn("saving")
+                                
 							end
 						end
 						togglefocus = not togglefocus
@@ -2437,7 +2437,7 @@ function verny.create(Settings)
 							callback(value)
 
 							if ConfigSetting.AutoSave then
-                                warn("saving")
+                                
 							end
 						else
 							local value = math.floor(((pos.X.Scale * Max) / Max) * (Max - Min) + Min)
@@ -2447,7 +2447,7 @@ function verny.create(Settings)
 
 							if ConfigSetting.AutoSave then
 								
-                                warn("saving")
+                                
 							end
 						end
 					end
@@ -2620,7 +2620,7 @@ function verny.create(Settings)
 								Config[ValueName] = textbox.Text
 								pcall(callback, textbox.Text)
 								if ConfigSetting.AutoSave then
-									warn("saving")
+									
 								end
 							end
 						end
