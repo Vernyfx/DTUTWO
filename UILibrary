@@ -2761,11 +2761,11 @@ function verny.create(Settings)
                     uipadding.PaddingLeft = UDim.new(0,13)
 
                     content.Size = UDim2.new(0.95,0,0,(content.TextBounds.Y + 40) * 1.5)
-                    paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 10)
+                    paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 5)
 
                     content:GetPropertyChangedSignal("Text"):Connect(function()
                         content.Size = UDim2.new(1, 0, 0, (content.TextBounds.Y + 40) * 1.5)
-                        paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 40)
+                        paragraphframe.Size = UDim2.new(0.863, -10, 0, content.TextBounds.Y + 5)
                     end)
 
 					function Refresh.Update(v)
